@@ -4,7 +4,7 @@ workspace:
   specs:
     kubernetes:
       image:
-        value: index.docker.io/codercom/enterprise-webstorm:ubuntu
+        value: index.docker.io/marktmilligan/webstorm:latest
       container-based-vm:
         value: false
       cpu: 
