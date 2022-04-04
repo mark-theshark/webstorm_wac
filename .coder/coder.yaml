@@ -1,0 +1,63 @@
+version: 0.2
+workspace:
+  type: kubernetes
+  specs:
+    kubernetes:
+      image:
+        value: index.docker.io/codercom/enterprise-webstorm:ubuntu
+      container-based-vm:
+        value: false
+      cpu: 
+        value: 4
+      memory:
+        value: 8 
+      disk:
+        value: 10
+      gpu-count:
+        value: 0
+      labels:
+        value:
+          com.coder.custom.node.version: "14.17" 
+          com.coder.custom.chargeback: "team_14c"
+  configure:
+    start:
+      value:
+        - name: "set ssh keys"
+          command: |
+            ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+        - name: "clone node react project"
+          command: |
+            REPO_1_PATH=$HOME/coder-react
+            if [ -d $REPO_1_PATH ]; then
+              echo 'node react repo already exists - skip clone, do fetch and reset'
+              cd $REPO_1_PATH
+              git fetch --all
+              git reset --hard origin/main
+            else
+              echo 'node react repo DOES NOT exists, git clone'
+              git clone git@github.com:mtm20176/coder-react.git 
+              cd $REPO_1_PATH
+            fi  
+            echo 'yarn building dependencies'
+            yarn     
+        - name: "install vim editor"
+          directory: /home/coder/
+          shell: /bin/bash
+          command: |
+            continue-on-error: true
+            if [ -f "/etc/arch-release" ]; then
+              echo "Arch Linux"
+              sudo pacman -S vim --noconfirm
+              echo 'installed vim'
+            elif [ -f "/etc/lsb-release" ]; then
+              echo "Ubuntu" 
+              sudo apt update
+              sudo apt install vim
+              echo 'installed vim'
+            fi              
+  dev-urls:
+    value:
+      - name: webstormnodeapp
+        port: 3000
+        scheme: http
+        access: org
