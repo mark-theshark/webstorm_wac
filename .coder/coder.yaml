@@ -17,7 +17,7 @@ workspace:
         value: 0
       labels:
         value:
-          com.coder.custom.node.version: "14.17" 
+          com.coder.custom.node.version: "16.14.2" 
           com.coder.custom.chargeback: "team_14c"
   configure:
     start:
